@@ -1,0 +1,6 @@
+WARD 16 FINAL BUILD
+Logo: logo.png
+Voice API: True
+fetch(): False
+XMLHttpRequest: False
+Data: {'data/voters.js': (11591185, 'd1906f82e285ce85a5f86a8b63e368d557d3f60dc240a07fe9a2824b16d00e8a'), 'data/parts.js': (9801, '75f16b84949b7b81cbf78187daebac427f734b6953fdb616513ca1a7f99c6a7b')}

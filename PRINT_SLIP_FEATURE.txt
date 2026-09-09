@@ -1,0 +1,18 @@
+PRINT SLIP FEATURE
+
+A one-page voter slip can be printed from every search result or from the voter detail dialog.
+The slip includes:
+- Voter name
+- Father/Husband name and relation
+- Gender and age
+- House number
+- EPIC
+- Serial number
+- Part number
+- Colony/area
+- Polling station number
+- Complete polling station address
+- PDF page reference
+
+Use the "🖨 Slip" button on a result or "🖨️ Slip Print" in the detail dialog.
+The print layout is optimized for A4 and uses a clean official-style layout.

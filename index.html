@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="hi">
+
+<head>
+<link rel="icon" type="image/png" href="images/logo.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Durga Das Pal Ward 16 Voter Search</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+<a class="skip-link" href="#main-content">मुख्य सामग्री पर जाएँ</a>
+    <header class="glass top"><b>✦ Durga Das Pal Ward 16</b>
+        <nav><button data-go="home">होम</button><button data-go="search">खोजें</button><button id="theme">☼
+                Light</button></nav>
+    </header>
+    <main id="home">
+        <section class="hero">
+            <picture id="bannerPicture">
+                <img id="banner" src="images/banner-light.png" alt="Ward 16">
+            </picture>
+        </section>
+        <section class="glass intro"><small>Durga Das Pal Ward 16</small>
+            <h1>अपने मतदाता की जानकारी खोजें</h1>
+            <p>नाम, EPIC, मकान नंबर, क्रमांक, भाग या पिता/पति के नाम से खोजें</p>
+            <div class="modes">
+                <button class="mode active" data-mode="name">नाम</button>
+                <button class="mode" data-mode="epic">EPIC</button>
+                <button class="mode" data-mode="house">मकान नंबर</button>
+                <button class="mode" data-mode="serial">क्रमांक</button>
+                <button class="mode" data-mode="part">भाग</button>
+                <button class="mode" data-mode="relation">पिता/पति का नाम</button>
+                <div class="part-select-wrap">
+                    <select id="partFilter" class="part-filter" aria-label="भाग फ़िल्टर">
+                        <option value="">सभी भाग (1-13)</option>
+                        <option value="1">भाग 1</option>
+                        <option value="2">भाग 2</option>
+                        <option value="3">भाग 3</option>
+                        <option value="4">भाग 4</option>
+                        <option value="5">भाग 5</option>
+                        <option value="6">भाग 6</option>
+                        <option value="7">भाग 7</option>
+                        <option value="8">भाग 8</option>
+                        <option value="9">भाग 9</option>
+                        <option value="10">भाग 10</option>
+                        <option value="11">भाग 11</option>
+                        <option value="12">भाग 12</option>
+                        <option value="13">भाग 13</option>
+                    </select>
+                </div>
+            </div>
+            <div class="voice-controls">
+                <div class="lang-picker" id="langPicker" role="radiogroup" aria-label="Voice Search Language">
+                    <button type="button" class="lang-btn active" data-lang="hi-IN" role="radio" aria-checked="true">हिंदी</button>
+                    <button type="button" class="lang-btn" data-lang="en-IN" role="radio" aria-checked="false">English</button>
+                </div>
+            </div>
+            <div class="search">
+                <button type="button" id="micBtn" class="mic-btn" aria-label="Voice Search" title="आवाज़ से खोजें">
+                    <span class="mic-icon" aria-hidden="true">🎙</span>
+                    <span class="mic-stop-icon" aria-hidden="true" style="display:none;">■</span>
+                </button>
+                <input id="q" placeholder="यहाँ खोजें या आवाज़ से बोलें…" aria-label="मतदाता खोजें">
+                <button id="go" aria-label="खोजें">⌕</button>
+            </div>
+            <div id="voiceStatus" class="voice-status" aria-live="polite" style="display:none;"></div>
+        </section>
+        <section class="stats">
+            <div class="glass"><b id="pc">13</b><span>कुल भाग</span></div>
+            <div class="glass"><b id="vc">0</b><span>कुल मतदाता</span></div>
+        </section>
+        <section id="search">
+            <h2>Search Results <small id="count"></small></h2>
+            <div id="results" class="results">
+                <div class="empty">ऊपर से खोज शुरू करें</div>
+            </div>
+        </section>
+    </main>
+    <dialog id="dlg">
+        <div class="glass modal"><button id="close">×</button><small>मतदाता विवरण</small>
+            <h2 id="dn">—</h2>
+            <p id="de"></p>
+            <div id="details"></div><div class="modal-actions"><button id="pdf">📄 PDF में देखें</button><button id="printSlip">🖨️ Slip Print</button></div>
+        </div>
+    </dialog>
+    <script src="data/voters.js"></script>
+    <script src="data/parts.js"></script>
+    <section id="printSlipArea" aria-hidden="true"></section>
+    <script src="js/app.js"></script>
+<section id="printSlipArea" aria-hidden="true"></section>
+</body>
+
+</html>

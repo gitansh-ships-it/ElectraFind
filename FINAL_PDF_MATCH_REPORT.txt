@@ -1,0 +1,32 @@
+WARD 16 FINAL PDF MATCH REPORT
+
+Final active records: 14,912
+Mool Suchi records: 14,666
+Supplement additions processed: 623
+Deletion entries processed: 377
+Final formula: 14,666 + 623 - 377 = 14,912
+
+Part counts:
+{
+  "1": 1204,
+  "2": 1376,
+  "3": 753,
+  "4": 1347,
+  "5": 1289,
+  "6": 1397,
+  "7": 1308,
+  "8": 1387,
+  "9": 1266,
+  "10": 1314,
+  "11": 666,
+  "12": 440,
+  "13": 1165
+}
+
+Verified invariants:
+- No duplicate (part, serial) keys in final dataset.
+- Deletion entries removed by exact part+serial marker from PDF supplement component 2.
+- Addition page mapping taken only from component 1 sections.
+- Existing Mool Suchi records were retained; final dataset adds surviving supplement records and removes exact deletion entries.
+- Voice-search code retained.
+- WhatsApp share added for any contact/group via wa.me share dialog.

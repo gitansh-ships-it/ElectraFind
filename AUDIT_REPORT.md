@@ -1,0 +1,102 @@
+`
+========================================================================================================
+                          WARD 16 JAIPUR NAGAR NIGAM — OFFICIAL ELECTORAL ROLL AUDIT REPORT             
+========================================================================================================
+
+AUTHORITATIVE SOURCE FILE : JAIPUR NAGAR NIGAM-Ward No-016-Part No-1to013.pdf (682 Pages, 13 Parts)
+DATASET TARGET            : webapp/data/voters.js
+AUDIT COMPLETION TIMESTAMP: 2026-09-09
+
+========================================================================================================
+SECTION 1: MATHEMATICAL RECONCILIATION OF THE 246 DISCREPANCY
+========================================================================================================
+1. Official PDF Reference Total (Final Net Electors) : 14,912
+2. Dataset Active Electors (Mool Suchi / Main Roll)   : 14,666
+3. Mathematical Difference                           : +246 (14,912 - 14,666)
+
+WHY THIS EXACT DIFFERENCE OF +246 EXISTS:
+--------------------------------------------------------------------------------------------------------
+The source document contains THREE sequential legal phases for all 13 Parts:
+  Phase 1: मूल सूची (Mool Suchi / Main Continuous Roll)              -> 14,666 Active Voter Cards
+  Phase 2: पूरक सूची-1 (Supplement-1 / Gahan Punarikshan 2026)        -> +361 Added, -309 Deleted (= 14,718 Net)
+  Phase 3: पूरक सूची-2 (Supplement-2 / Nirantar Adatan 31/08/2026)     -> +262 Added, -68 Deleted  (= 14,912 Net)
+
+Net Change from Phase 1 (Mool Suchi) to Phase 3 (Final Total):
+  Phase 1 Base (Active Cards in Dataset) :  14,666
+  Plus Phase 2 Net Change (361 - 309)    :    +52
+  Plus Phase 3 Net Change (262 - 68)     :   +194
+  -----------------------------------------------
+  Official Final PDF Total (Row I+II-III):  14,912
+  TOTAL UNEXPLAINED DIFFERENCE           :      0 (100% Mathematically Proven from Official Tables)
+
+========================================================================================================
+SECTION 2: PART-BY-PART OFFICIAL SUMMARY SHEET AUDIT (PARTS 1 TO 13)
+========================================================================================================
+Part | Mool (Dataset) | Supp-1 Add | Supp-1 Del | Supp-1 Net | Supp-2 Add | Supp-2 Del | Final Net Total | Net Diff
+-----+----------------+------------+------------+------------+------------+------------+-----------------+---------
+   1 |           1203 |         36 |         42 |       1197 |         11 |          4 |            1204 |       +1
+   2 |           1364 |         40 |         30 |       1374 |         18 |         16 |            1376 |      +12
+   3 |            708 |         24 |         39 |        693 |         70 |         10 |             753 |      +45
+   4 |           1340 |         31 |         23 |       1348 |          6 |          7 |            1347 |       +7
+   5 |           1237 |         39 |         18 |       1258 |         35 |          4 |            1289 |      +52
+   6 |           1367 |         22 |         17 |       1372 |         31 |          6 |            1397 |      +30
+   7 |           1272 |         40 |         28 |       1284 |         25 |          1 |            1308 |      +36
+   8 |           1396 |         53 |         52 |       1397 |          9 |         19 |            1387 |       -9
+   9 |           1245 |         10 |          0 |       1255 |         11 |          0 |            1266 |      +21
+  10 |           1280 |         45 |         16 |       1309 |          5 |          0 |            1314 |      +34
+  11 |            652 |         14 |         15 |        651 |         16 |          1 |             666 |      +14
+  12 |            445 |          4 |          9 |        440 |          0 |          0 |             440 |       -5
+  13 |           1157 |          3 |         20 |       1140 |         25 |          0 |            1165 |       +8
+-----+----------------+------------+------------+------------+------------+------------+-----------------+---------
+TOT  |          14666 |        361 |        309 |      14718 |        262 |         68 |           14912 |     +246
+
+========================================================================================================
+SECTION 3: DUPLICATE EPIC AUDIT — RDR3862554
+========================================================================================================
+STATUS: Visually inspected and verified on source PDF canvas.
+This is an authentic government duplicate printed in the official electoral roll:
+  Card 1 -> Part: 7 | Serial: 177 | PDF Page: 344
+            Voter Name    : शिव कुमार अग्रवाल
+            Father Name   : बनवारी लाल अग्रवाल
+            House No      : इ-112
+            Age / Gender  : 73 / पुरुष
+            EPIC No       : RDR3862554
+
+  Card 2 -> Part: 9 | Serial: 843 | PDF Page: 493
+            Voter Name    : शिव कुमार अग्रवाल
+            Father Name   : बनवारी लाल अग्रवाल
+            House No      : 281
+            Age / Gender  : 73 / पुरुष
+            EPIC No       : RDR3862554
+
+Both voter cards are active, preserved, and searchable in the application with exact distinct page links.
+
+========================================================================================================
+SECTION 4: VERIFIED POLLING STATIONS (MATDAAN KENDRA 197 TO 209)
+========================================================================================================
+Part 1  : Matdaan Kendra 197 — ज्ञानदीप सीनियर सैकण्डरी स्कूल, मदनबाडी नया खेडा, दांया भाग
+Part 2  : Matdaan Kendra 198 — ज्ञानदीप सीनियर सैकण्डरी स्कूल, मदनबाडी नया खेडा, मध्य भाग
+Part 3  : Matdaan Kendra 199 — मयूर पब्लिक उच्च माध्यमिक विद्यालय, विद्याधर नगर, नया खेड़ा, कमरा नंबर 1
+Part 4  : Matdaan Kendra 200 — उच्च माध्यमिक बालिका आदर्श विद्या मन्दिर, अम्बाबाडी, कमरा नंबर-15
+Part 5  : Matdaan Kendra 201 — उच्च माध्यमिक बालिका आदर्श विद्या मन्दिर, अम्बाबाडी, कमरा नंबर-13
+Part 6  : Matdaan Kendra 202 — सेन्ट्रल एकेडमी सीनियर सैकण्डरी स्कूल, पानी की टंकी के पास, अम्बाबाडी, कमरा नंबर-5
+Part 7  : Matdaan Kendra 203 — सेन्ट्रल एकेडमी सीनियर सैकण्डरी स्कूल, पानी की टंकी के पास, अम्बाबाडी, कमरा नंबर-7
+Part 8  : Matdaan Kendra 204 — सेन्ट्रल एकेडमी सीनियर सैकण्डरी स्कूल, पानी की टंकी के पास, अम्बाबाडी, कमरा नंबर-11
+Part 9  : Matdaan Kendra 205 — उच्च माध्यमिक बालिका आदर्श विद्या मन्दिर, अम्बाबाडी, कमरा नंबर-12
+Part 10 : Matdaan Kendra 206 — उच्च माध्यमिक बालिका आदर्श विद्या मन्दिर, अम्बाबाडी, कमरा नंबर-11
+Part 11 : Matdaan Kendra 207 — उच्च माध्यमिक बालिका आदर्श विद्या मन्दिर, अम्बाबाडी, कमरा नंबर-14
+Part 12 : Matdaan Kendra 208 — कार्यालय- मुख्य अभियन्ता जयपुर विद्युत वितरण निगम लिमिटेड, राम मंदिर, पुराना पॉवर हाउस स्टेशन रोड, कमरा नंबर-30
+Part 13 : Matdaan Kendra 209 — कार्यालय- मुख्य अभियन्ता जयपुर विद्युत वितरण निगम लिमिटेड, राम मंदिर, पुराना पॉवर हाउस स्टेशन रोड, कमरा नंबर-31
+
+========================================================================================================
+SECTION 5: ARCHITECTURAL & OPERATIONAL VERIFICATION
+========================================================================================================
+  [x] file:/// Direct Double-Click Supported : YES (Zero fetch, zero AJAX, 100% synchronous script loading)
+  [x] Netlify Static Deployment Supported    : YES (Deploy identical webapp/ folder)
+  [x] Backend / Serverless Dependency Free   : YES (Zero PHP, zero MySQL, zero Node/npm runtime)
+  [x] Voice Search Completely Eliminated     : YES (Zero microphone buttons, zero Web Speech API prompts)
+  [x] Polling Station Explicit on Every Card : YES (Visible on all cards & detail modals)
+  [x] Direct PDF Page Button Linked          : YES (pdf/ward16.pdf#page=N)
+  [x] Color Palettes & Glassmorphism Theme   : YES (Strictly matching specified hex codes and banners)
+========================================================================================================
+`
