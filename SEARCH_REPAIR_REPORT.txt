@@ -1,0 +1,9 @@
+Search repair:
+- Dynamic Devanagari normalization and consonant skeleton.
+- Dynamic Hindi -> Roman transliteration; no need for per-record search_variants.
+- Roman spelling variants and fuzzy matching.
+- Hindi fuzzy matching improved for matra/nukta/orthographic differences.
+- Relation-name search improved.
+- Search index precomputed once for 14,912 records.
+- Result cap raised from 250 to 500 while preserving ranking.
+- Existing data unchanged.
