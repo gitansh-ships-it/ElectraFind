@@ -1,0 +1,16 @@
+WARD 16 WEB APP — SEARCH + RESPONSIVE FIX
+
+Fixed:
+1. Search index now precomputes normalized Hindi, English, Hindi transliteration, Devanagari skeleton and relation fields once.
+2. Name search supports exact Hindi/English, Hindi matra/nukta normalization, Roman/Hinglish variants, transliteration and controlled typo tolerance.
+3. Relation-name search supports the same Hindi/English/Roman handling.
+4. Search no longer depends on the almost-empty search_variants field.
+5. Search result limit increased to 1000; if more matches exist the UI shows a + indicator.
+6. Exact-name ranking is kept ahead of fuzzy/variant matches.
+7. Search lookup uses an ID Map instead of repeatedly scanning the full index.
+8. Verified against all 14,912 records: every non-empty name_hindi and name_english is directly matchable; every non-empty relation_name_hindi and relation_name_english is directly matchable.
+9. ward16_frontend_files was repaired: real voters.js, parts.js and images are now included instead of empty placeholder data files.
+10. Responsive pass added for desktop, tablet, mobile and very small screens; cards, buttons, modes, search bar, modal, stats and banner now shrink without horizontal overflow.
+11. Duplicate printSlipArea element removed from index.html.
+
+Data count verified: 14,912 voters.

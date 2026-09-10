@@ -12,30 +12,130 @@ function kendra(v){
 function setMode(newMode){mode=newMode;document.querySelectorAll(".mode").forEach(x=>x.classList.toggle("active",x.dataset.mode===mode));}
 document.querySelectorAll(".mode").forEach(b=>b.onclick=()=>{setMode(b.dataset.mode);search();});
 const partFilterEl=$("#partFilter");if(partFilterEl){partFilterEl.onchange=()=>{selectedPart=partFilterEl.value;partFilterEl.classList.toggle("has-filter",Boolean(selectedPart));search();};}
-function vars(s){let w=norm(s),a=[w];if(w.includes("ee"))a.push(w.replace(/ee/g,"i"));if(w.includes("i"))a.push(w.replace(/i/g,"ee"));if(w.includes("sh"))a.push(w.replace(/sh/g,"s"));if(w.includes("s"))a.push(w.replace(/s/g,"sh"));if(w.includes("v"))a.push(w.replace(/v/g,"w"));if(w.includes("w"))a.push(w.replace(/w/g,"v"));if(w.includes("agrawal"))a.push(w.replace(/agrawal/g,"agarwal"));if(w.includes("agarwal"))a.push(w.replace(/agarwal/g,"agrawal"));if(w.includes("agraval"))a.push(w.replace(/agraval/g,"agarwal"));if(w.includes("aa"))a.push(w.replace(/aa/g,"a"));if(w.includes("oo"))a.push(w.replace(/oo/g,"u"));return [...new Set(a)]}
-function romanKey(s){return norm(s).replace(/[^a-z0-9 ]/g,"").replace(/[aeiou]/g,"").replace(/(.)\1+/g,"$1").replace(/ph/g,"f").replace(/bh/g,"b").replace(/dh/g,"d").replace(/th/g,"t").replace(/sh/g,"s").replace(/ch/g,"c").replace(/aa/g,"a").replace(/ee/g,"i").replace(/oo/g,"u").replace(/(.)\1+/g,"$1").replace(/\s+/g," ").trim()}
-function devaFold(s){return norm(s).replace(/़/g,"").replace(/क़/g,"क").replace(/ख़/g,"ख").replace(/ग़/g,"ग").replace(/ज़/g,"ज").replace(/ड़/g,"ड").replace(/ढ़/g,"ढ").replace(/फ़/g,"फ").replace(/य़/g,"य").replace(/ऱ/g,"र").replace(/ळ/g,"ल")}
-function devaKey(s){return devaFold(s).replace(/[ािीुूृॄेैोौंःँ्]/g,"").replace(/अ/g,"").replace(/(.)\1+/g,"$1")}
-const H2R={"अ":"a","आ":"aa","इ":"i","ई":"ee","उ":"u","ऊ":"oo","ऋ":"ri","ए":"e","ऐ":"ai","ओ":"o","औ":"au","क":"k","ख":"kh","ग":"g","घ":"gh","ङ":"ng","च":"ch","छ":"chh","ज":"j","झ":"jh","ञ":"ny","ट":"t","ठ":"th","ड":"d","ढ":"dh","ण":"n","त":"t","थ":"th","द":"d","ध":"dh","न":"n","प":"p","फ":"ph","ब":"b","भ":"bh","म":"m","य":"y","र":"r","ल":"l","व":"v","श":"sh","ष":"sh","स":"s","ह":"h","क़":"q","ख़":"kh","ग़":"gh","ज़":"z","ड़":"r","ढ़":"rh","फ़":"f","ऱ":"r","ळ":"l","ज्ञ":"gya","क्ष":"ksh","त्र":"tr","श्र":"shr"}
-const M2R={"ा":"aa","ि":"i","ी":"ee","ु":"u","ू":"oo","ृ":"ri","ॄ":"ree","े":"e","ै":"ai","ो":"o","ौ":"au","ं":"n","ः":"h","ँ":"n","़":""}
-function hindiRoman(s){s=devaFold(s);let out="",i=0;while(i<s.length){let two=s.slice(i,i+2);if(H2R[two]){out+=H2R[two];i+=2;continue}let c=s[i],next=s[i+1]||"";if(H2R[c]){out+=H2R[c];if(M2R[next]){out+=M2R[next];i+=2;continue}if(next==="्"){i+=2;continue}i++;continue}if(M2R[c]){out+=M2R[c];i++;continue}if(c==="्"){i++;continue}if(c===" "||/[\u200c\u200d,.;:()\-_/]/.test(c)){out+=" ";i++;continue}i++}return out.replace(/\s+/g," ").trim()}
-function lev(a,b){a=String(a||"");b=String(b||"");if(a===b)return 0;if(!a)return b.length;if(!b)return a.length;if(a.length>b.length){const t=a;a=b;b=t}let prev=Array.from({length:a.length+1},(_,i)=>i);for(let j=1;j<=b.length;j++){let cur=[j];for(let i=1;i<=a.length;i++)cur[i]=Math.min(cur[i-1]+1,prev[i]+1,prev[i-1]+(a[i-1]===b[j-1]?0:1));prev=cur}return prev[a.length]}
-function fuzzyRoman(q,candidate){let a=romanKey(q),b=romanKey(candidate);if(!a||!b)return false;if(a===b||a.includes(b)||b.includes(a))return true;const at=a.split(" "),bt=b.split(" ");if(at.length!==bt.length)return false;let total=0;for(let i=0;i<at.length;i++){const x=at[i],y=bt[i],d=lev(x,y),lim=x.length<=3?1:Math.max(1,Math.floor(Math.min(x.length,y.length)*.30));if(d>lim)return false;total+=d}return total<=Math.max(1,Math.floor(a.replace(/ /g,"").length*.22))}
-function fuzzyHindi(q,candidate){q=devaFold(q);candidate=devaFold(candidate);if(!q||!candidate)return false;if(q===candidate||candidate.includes(q)||q.includes(candidate))return true;let qk=devaKey(q),ck=devaKey(candidate);if(qk&&ck&&(qk===ck||qk.includes(ck)||ck.includes(qk)))return true;const a=q.split(/\s+/),b=candidate.split(/\s+/);if(a.length!==b.length)return false;let total=0;for(let i=0;i<a.length;i++){let x=a[i],y=b[i],d=lev(x,y),lim=x.length<=3?1:Math.max(1,Math.floor(Math.min(x.length,y.length)*.32));if(d>lim)return false;total+=d}return total<=Math.max(1,Math.floor(q.replace(/\s/g,"").length*.22))}
-function fields(v){return{nh:norm(get(v,"name_hindi","name")),ne:norm(get(v,"name_english","english_name")),sv:norm(get(v,"search_variants","search_text")),rh:norm(get(v,"relation_name_hindi","relation")),re:norm(get(v,"relation_name_english")),hr:hindiRoman(get(v,"name_hindi","name")),rr:hindiRoman(get(v,"relation_name_hindi","relation"))}}
-const SEARCH_INDEX=V.map(v=>({v,f:fields(v)}))
-function match(v,q){if(selectedPart&&String(get(v,"part_no","part"))!==String(selectedPart))return false;let n=norm(q),f=fields(v);
-if(mode==="epic")return ep(get(v,"epic")).includes(ep(q));
-if(mode==="serial"){let qn=n.replace(/[^0-9]/g,"");return String(get(v,"serial_no","serial"))===qn||String(get(v,"serial_no","serial"))===n}
-if(mode==="part"){let qp=n.replace(/[^0-9]/g,"");return String(get(v,"part_no","part"))===qp||String(get(v,"part_no","part"))===n}
-if(mode==="house"){let h=norm(get(v,"house_no","house"));return h.includes(n)||h.replace(/\s+/g,"").includes(n.replace(/\s+/g,""))}
-if(mode==="relation"){let qR=vars(n),qr=hindiRoman(n);return f.rh.includes(n)||f.re.includes(n)||f.rr.includes(qr)||qR.some(x=>f.re.includes(x)||f.rr.includes(hindiRoman(x))||f.rh.includes(x))||f.rh.split(/\s+/).some(x=>x.startsWith(n))}
-let qRoman=/^[a-z0-9 ]+$/i.test(n),qHi=devaFold(n),qHiKey=devaKey(qHi),qHiRoman=hindiRoman(qHi);
-if(f.nh.includes(n)||f.ne.includes(n)||f.sv.includes(n)||f.rh.includes(n))return true;
-if(qHiKey&&devaKey(f.nh).includes(qHiKey))return true;
-if(qRoman){let qks=vars(n).map(romanKey).filter(Boolean),targets=[f.ne,f.sv,f.hr];if(targets.some(t=>{let tk=romanKey(t);return qks.some(k=>tk.includes(k)||k.includes(tk))}))return true;if(fuzzyRoman(n,f.ne)||fuzzyRoman(n,f.sv)||fuzzyRoman(n,f.hr))return true}
-else{if(qHiRoman&&romanKey(f.hr).includes(romanKey(qHiRoman)))return true;if(fuzzyHindi(qHi,f.nh))return true}
-return vars(n).some(x=>f.ne.includes(x)||f.sv.includes(x)||f.rh.includes(x)||fuzzyRoman(x,f.ne)||fuzzyRoman(x,f.sv))}
+function vars(s){
+ const w=norm(s), out=new Set([w]);
+ const swaps=[[/ee/g,'i'],[/i/g,'ee'],[/sh/g,'s'],[/s/g,'sh'],[/v/g,'w'],[/w/g,'v'],[/aa/g,'a'],[/a/g,'aa'],[/oo/g,'u'],[/u/g,'oo'],[/agrawal/g,'agarwal'],[/agarwal/g,'agrawal'],[/agraval/g,'agarwal'],[/pr/g,'p r'],[/ph/g,'f']];
+ for(const [re,to] of swaps) if(re.test(w)) out.add(w.replace(re,to));
+ return [...out];
+}
+function romanKey(s){
+ return norm(s).replace(/[^a-z0-9 ]/g,'').replace(/ph/g,'f').replace(/bh/g,'b').replace(/dh/g,'d').replace(/th/g,'t').replace(/sh/g,'s').replace(/ch/g,'c').replace(/aa/g,'a').replace(/ee/g,'i').replace(/oo/g,'u').replace(/[aeiou]/g,'').replace(/(.)\1+/g,'$1').replace(/\s+/g,' ').trim();
+}
+function devaFold(s){return norm(s).replace(/़/g,'').replace(/क़/g,'क').replace(/ख़/g,'ख').replace(/ग़/g,'ग').replace(/ज़/g,'ज').replace(/ड़/g,'ड').replace(/ढ़/g,'ढ').replace(/फ़/g,'फ').replace(/य़/g,'य').replace(/ऱ/g,'र').replace(/ळ/g,'ल')}
+function devaKey(s){return devaFold(s).replace(/[ािीुूृॄेैोौंःँ्]/g,'').replace(/अ/g,'').replace(/(.)\1+/g,'$1')}
+const H2R={"अ":"a","आ":"aa","इ":"i","ई":"ee","उ":"u","ऊ":"oo","ऋ":"ri","ए":"e","ऐ":"ai","ओ":"o","औ":"au","क":"k","ख":"kh","ग":"g","घ":"gh","ङ":"ng","च":"ch","छ":"chh","ज":"j","झ":"jh","ञ":"ny","ट":"t","ठ":"th","ड":"d","ढ":"dh","ण":"n","त":"t","थ":"th","द":"d","ध":"dh","न":"n","प":"p","फ":"ph","ब":"b","भ":"bh","म":"m","य":"y","र":"r","ल":"l","व":"v","श":"sh","ष":"sh","स":"s","ह":"h","क़":"q","ख़":"kh","ग़":"gh","ज़":"z","ड़":"r","ढ़":"rh","फ़":"f","ऱ":"r","ळ":"l","ज्ञ":"gya","क्ष":"ksh","त्र":"tr","श्र":"shr"};
+const M2R={"ा":"aa","ि":"i","ी":"ee","ु":"u","ू":"oo","ृ":"ri","ॄ":"ree","े":"e","ै":"ai","ो":"o","ौ":"au","ं":"n","ः":"h","ँ":"n","़":""};
+function hindiRoman(s){
+ s=devaFold(s);let out='',i=0;
+ while(i<s.length){
+  const two=s.slice(i,i+2); if(H2R[two]){out+=H2R[two];i+=2;continue}
+  const c=s[i],next=s[i+1]||'';
+  if(H2R[c]){out+=H2R[c];if(M2R[next]){out+=M2R[next];i+=2;continue}if(next==='्'){i+=2;continue}i++;continue}
+  if(M2R[c]){out+=M2R[c];i++;continue}
+  if(c==='्'){i++;continue}
+  if(/\s|[\u200c\u200d,.;:()\-_/]/.test(c)){out+=' ';i++;continue}
+  i++;
+ }
+ return out.replace(/\s+/g,' ').trim();
+}
+function lev(a,b){a=String(a||'');b=String(b||'');if(a===b)return 0;if(!a)return b.length;if(!b)return a.length;if(a.length>b.length){const t=a;a=b;b=t}let prev=Array.from({length:a.length+1},(_,i)=>i);for(let j=1;j<=b.length;j++){let cur=[j];for(let i=1;i<=a.length;i++)cur[i]=Math.min(cur[i-1]+1,prev[i]+1,prev[i-1]+(a[i-1]===b[j-1]?0:1));prev=cur}return prev[a.length]}
+function tokenFuzzy(q,c){
+ const qa=norm(q),qb=norm(c),a=romanKey(qa),b=romanKey(qb);if(!qa||!qb)return false;if(qa===qb||a===b)return true;
+ if(Math.abs(qa.length-qb.length)>1)return false;
+ const d=lev(qa,qb),lim=qa.length<=3?1:Math.max(1,Math.floor(Math.min(qa.length,qb.length)*.18));
+ return d<=lim;
+}
+function fuzzyRoman(q,candidate){
+ const a=norm(q).split(/\s+/).filter(Boolean), b=norm(candidate).split(/\s+/).filter(Boolean);if(!a.length||!b.length)return false;
+ return a.every(x=>b.some(y=>tokenFuzzy(x,y)||tokenFuzzy(x, h2rSafe(y))));
+}
+function fuzzyHindiToken(q,c){
+ const a=devaFold(q),b=devaFold(c);if(!a||!b)return false;if(a===b)return true;
+ const ak=devaKey(a),bk=devaKey(b);if(!ak||!bk)return false;if(ak===bk)return true;
+ const d=lev(a,b),lim=a.length<=3?1:Math.max(1,Math.floor(Math.min(a.length,b.length)*.22));
+ return d<=lim&&Math.max(a.length,b.length)-Math.min(a.length,b.length)<=1;
+}
+function fuzzyHindi(q,candidate){
+ const a=devaFold(q).split(/\s+/).filter(Boolean), b=devaFold(candidate).split(/\s+/).filter(Boolean);if(!a.length||!b.length)return false;
+ return a.length===b.length && a.every((x,i)=>fuzzyHindiToken(x,b[i]));
+}
+function h2rSafe(s){return /[\u0900-\u097f]/.test(s)?hindiRoman(s):s}
+function fields(v){
+ const nh=norm(get(v,'name_hindi','name')), ne=norm(get(v,'name_english','english_name')), sv=norm(get(v,'search_variants','search_text')), rh=norm(get(v,'relation_name_hindi','relation')), re=norm(get(v,'relation_name_english'));
+ const hr=hindiRoman(nh), rr=hindiRoman(rh);
+ const nameText=[nh,ne,sv,hr].filter(Boolean), relText=[rh,re,rr].filter(Boolean);
+ return {nh,ne,sv,rh,re,hr,rr,nhk:devaKey(nh),rhk:devaKey(rh),nek:romanKey(ne),hrk:romanKey(hr),rek:romanKey(re),names:nameText,rels:relText};
+}
+const SEARCH_INDEX=V.map(v=>({v,f:fields(v)}));
+const SEARCH_BY_ID=new Map(SEARCH_INDEX.map(x=>[String(x.v.id),x]));
+function containsAny(text,qs){return qs.some(q=>q&&text.includes(q))}
+function tokenAll(q,candidate,roman=false){
+ const qt=(roman?norm(q):devaFold(q)).split(/\s+/).filter(Boolean), ct=(roman?norm(candidate):devaFold(candidate)).split(/\s+/).filter(Boolean);if(!qt.length)return false;
+ return qt.every(x=>ct.some(y=>roman?(y.includes(x)||tokenFuzzy(x,y)):(y.includes(x)||devaKey(y).includes(devaKey(x)))));
+}
+function nameMatch(f,q){
+ const n=norm(q), hi=devaFold(n), hk=devaKey(hi), hr=hindiRoman(hi), roman=/^[a-z0-9 ]+$/i.test(n);
+ if(!n)return false;
+ if(f.nh===n||f.ne===n||f.sv===n||f.hr===n)return true;
+ if(containsAny(f.nh,[n,hi])||containsAny(f.ne,[n])||containsAny(f.sv,[n]))return true;
+ if(hk&&f.nhk.includes(hk))return true;
+ if(hr&&f.hrk.includes(romanKey(hr)))return true;
+ if(roman){
+  const qs=vars(n).map(romanKey).filter(Boolean);
+  if(qs.some(k=>f.nek.includes(k)||f.hrk.includes(k)||romanKey(f.sv).includes(k)))return true;
+  if(tokenAll(n,f.ne,true)||tokenAll(n,f.hr,true)||tokenAll(n,f.sv,true))return true;
+  if(fuzzyRoman(n,f.ne)||fuzzyRoman(n,f.hr))return true;
+ }else if(fuzzyHindi(hi,f.nh))return true;
+ return false;
+}
+function relationMatch(f,q){
+ const n=norm(q),hi=devaFold(n),hk=devaKey(hi),hr=hindiRoman(hi),roman=/^[a-z0-9 ]+$/i.test(n);if(!n)return false;
+ if(f.rh===n||f.re===n||f.rr===n)return true;
+ if(f.rh.includes(n)||f.re.includes(n)||f.rr.includes(n))return true;
+ if(hk&&f.rhk.includes(hk))return true;
+ if(hr&&f.rr&&f.rr.includes(hr))return true;
+ if(roman){const qs=vars(n).map(romanKey).filter(Boolean);if(qs.some(k=>f.re.split(/\s+/).map(romanKey).some(x=>x.includes(k))||f.rr.split(/\s+/).map(romanKey).some(x=>x.includes(k))))return true;if(tokenAll(n,f.re,true)||tokenAll(n,f.rr,true)||fuzzyRoman(n,f.re)||fuzzyRoman(n,f.rr))return true}
+ else if(fuzzyHindi(hi,f.rh))return true;
+ return false;
+}
+function match(v,q){
+ const ix=SEARCH_BY_ID.get(String(v.id));if(!ix)return false;const f=ix.f;
+ if(selectedPart&&String(get(v,'part_no','part'))!==String(selectedPart))return false;
+ const n=norm(q);
+ if(mode==='epic')return ep(get(v,'epic')).includes(ep(q));
+ if(mode==='serial'){const qn=n.replace(/[^0-9]/g,'');return String(get(v,'serial_no','serial'))===qn||String(get(v,'serial_no','serial'))===n}
+ if(mode==='part'){const qp=n.replace(/[^0-9]/g,'');return String(get(v,'part_no','part'))===qp||String(get(v,'part_no','part'))===n}
+ if(mode==='house'){const h=norm(get(v,'house_no','house'));const compact=x=>x.replace(/\s+/g,'');return h===n||h.includes(n)||compact(h).includes(compact(n))}
+ if(mode==='relation')return relationMatch(f,q);
+ return nameMatch(f,q);
+}
+function score(v,q,n){
+ const f=SEARCH_BY_ID.get(String(v.id))?.f||fields(v), e=ep(get(v,'epic')), qe=ep(q), qk=romanKey(n), hk=devaKey(n), hr=hindiRoman(n);
+ if(qe&&e===qe)return 1;
+ if(mode==='serial'&&String(get(v,'serial_no','serial'))===n)return 2;
+ if(mode==='part'&&String(get(v,'part_no','part'))===n)return 2;
+ if(mode==='house'&&norm(get(v,'house_no','house'))===n)return 2;
+ if(f.nh===n||f.ne===n||f.hr===n||f.rh===n||f.re===n)return 3;
+ if(qk&&(f.nek===qk||f.hrk===qk))return 3;
+ if(hk&&f.nhk===hk)return 3;
+ if(hr&&romanKey(f.hr)===romanKey(hr))return 3;
+ if(f.nh.startsWith(n)||f.ne.startsWith(n)||f.hr.startsWith(n)||f.rh.startsWith(n))return 4;
+ if(qk&&(f.nek.startsWith(qk)||f.hrk.startsWith(qk)))return 4;
+ if(hk&&f.nhk.startsWith(hk))return 4;
+ if(f.nh.includes(n)||f.ne.includes(n)||f.hr.includes(n)||f.rh.includes(n))return 5;
+ if(qk&&(f.nek.includes(qk)||f.hrk.includes(qk)))return 6;
+ return 50;
+}
+function search(){
+ const q=$('#q').value.trim();
+ if(!q&&!selectedPart){$('#results').innerHTML='<div class="empty">ऊपर से खोज शुरू करें</div>';$('#count').textContent='';return}
+ const n=norm(q);
+ let r=SEARCH_INDEX.filter(x=>q?match(x.v,q):(!selectedPart||String(get(x.v,'part_no','part'))===String(selectedPart))).map(x=>x.v);
+ r.sort((a,b)=>score(a,q,n)-score(b,q,n)||Number(get(a,'part_no','part'))-Number(get(b,'part_no','part'))||Number(get(a,'serial_no','serial'))-Number(get(b,'serial_no','serial')));
+ const total=r.length, LIMIT=1000; r=r.slice(0,LIMIT);
+ $('#count').textContent=total?`(${r.length}${total>LIMIT?'+':''})`:'';
+ $('#results').innerHTML=r.length?r.map(v=>`<article class="card glass" data-id="${esc(v.id)}"><div class="name">${esc(get(v,'name_hindi','name')||'नाम उपलब्ध नहीं')}</div><div style="font-size:13px;color:var(--t2);margin:3px 0 6px;">पिता/पति का नाम: <b>${esc(get(v,'relation_name_hindi')||'—')}</b></div><div class="pills"><span class="pill">भाग: <b>${esc(get(v,'part_no')||'—')}</b></span><span class="pill">क्रमांक: <b>${esc(get(v,'serial_no')||'—')}</b></span><span class="pill">मकान: <b>${esc(get(v,'house_no')||'—')}</b></span><span class="pill">EPIC: <b>${esc(get(v,'epic')||'—')}</b></span><span class="pill">उम्र: ${esc(get(v,'age')||'—')}</span><span class="pill">लिंग: ${esc(get(v,'gender')||'—')}</span></div><div class="card-kendra"><div class="card-kendra-no">मतदान केन्द्र ${esc(kendra(v).no)}</div><div class="card-kendra-name">${esc(kendra(v).name)}</div><div class="card-kendra-address">${esc(kendra(v).address)}</div></div><div class="card-actions"><button type="button" class="whatsapp-btn" data-id="${esc(v.id)}">WhatsApp</button><button type="button" class="view-pdf-btn" data-page="${esc(get(v,'pdf_page'))}">पेज खोलें (#${esc(get(v,'pdf_page'))})</button><button type="button" class="print-slip-btn" data-id="${esc(v.id)}">🖨 Slip</button><button type="button" class="view-detail-btn">विवरण देखें</button></div></article>`).join(''):'<div class="empty">कोई परिणाम नहीं मिला</div>';
+}
 function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
 function score(v,q,n){let sc=100,f=fields(v),e=ep(get(v,"epic")),qe=ep(q);if(qe&&e===qe)return 1;if(mode==="serial"&&String(get(v,"serial_no","serial"))===n)return 2;if(mode==="part"&&String(get(v,"part_no","part"))===n)return 2;if(mode==="house"&&norm(get(v,"house_no","house"))===n)return 2;let qk=romanKey(n),hk=devaKey(n),hr=hindiRoman(n);if(f.nh===n||f.ne===n||f.sv===n||f.rh===n)return 3;if(qk&&(romanKey(f.ne)===qk||romanKey(f.hr)===qk))return 3;if(hk&&devaKey(f.nh)===hk)return 3;if(hr&&romanKey(f.hr)===romanKey(hr))return 3;if(f.nh.startsWith(n)||f.ne.startsWith(n)||f.sv.startsWith(n)||f.rh.startsWith(n))return 4;if(qk&&(romanKey(f.ne).startsWith(qk)||romanKey(f.hr).startsWith(qk)))return 4;if(hk&&devaKey(f.nh).startsWith(hk))return 4;if(f.nh.includes(n)||f.ne.includes(n)||f.sv.includes(n)||f.rh.includes(n))return 5;if(qk&&(romanKey(f.ne).includes(qk)||romanKey(f.hr).includes(qk)))return 6;return sc}
 function search(){let q=$("#q").value.trim();if(!q&&!selectedPart){$("#results").innerHTML='<div class="empty">ऊपर से खोज शुरू करें</div>';$("#count").textContent="";return}let n=norm(q);let r=SEARCH_INDEX.filter(x=>q?match(x.v,q):(!selectedPart||String(get(x.v,"part_no","part"))===String(selectedPart))).map(x=>x.v).sort((a,b)=>score(a,q,n)-score(b,q,n)).slice(0,500);$("#count").textContent=r.length?`(${r.length}${r.length===250?"+":""})`:"";$("#results").innerHTML=r.length?r.map(v=>`<article class="card glass" data-id="${esc(v.id)}"><div class="name">${esc(get(v,"name_hindi","name")||"नाम उपलब्ध नहीं")}</div><div style="font-size:13px;color:var(--t2);margin:3px 0 6px;">पिता/पति का नाम: <b>${esc(get(v,"relation_name_hindi")||"—")}</b></div><div class="pills"><span class="pill">भाग: <b>${esc(get(v,"part_no")||"—")}</b></span><span class="pill">क्रमांक: <b>${esc(get(v,"serial_no")||"—")}</b></span><span class="pill">मकान: <b>${esc(get(v,"house_no")||"—")}</b></span><span class="pill">EPIC: <b>${esc(get(v,"epic")||"—")}</b></span><span class="pill">उम्र: ${esc(get(v,"age")||"—")}</span><span class="pill">लिंग: ${esc(get(v,"gender")||"—")}</span></div><div class="card-kendra"><div class="card-kendra-no">मतदान केन्द्र ${esc(kendra(v).no)}</div><div class="card-kendra-name">${esc(kendra(v).name)}</div><div class="card-kendra-address">${esc(kendra(v).address)}</div></div><div style="display:flex;gap:8px;margin-top:10px;"><button type="button" class="whatsapp-btn" data-id="${esc(v.id)}" style="flex:1;padding:7px 10px;border-radius:10px;border:1px solid #25D366;background:#25D366;color:white;cursor:pointer;font-size:12px;font-weight:600;">WhatsApp</button><button type="button" class="view-pdf-btn" data-page="${esc(get(v,"pdf_page"))}" style="flex:1;padding:7px 10px;border-radius:10px;border:1px solid var(--p);background:var(--p);color:white;cursor:pointer;font-size:12px;font-weight:600;">पेज खोलें (#${esc(get(v,"pdf_page"))})</button><button type="button" class="print-slip-btn" data-id="${esc(v.id)}" style="flex:1;padding:7px 10px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--t);cursor:pointer;font-size:12px;font-weight:700;">🖨 Slip</button><button type="button" class="view-detail-btn" style="flex:1;padding:7px 10px;border-radius:10px;border:1px solid var(--b);background:transparent;color:var(--t);cursor:pointer;font-size:12px;">विवरण देखें</button></div></article>`).join(""):'<div class="empty">कोई परिणाम नहीं मिला</div>'}
